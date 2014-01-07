@@ -11,4 +11,5 @@ git submodule update --init
 # vim
 ln -s ~/.dot/vim ~/.vim
 ln -s ~/.dot/vim/rc ~/.vimrc
+~/.dot/vim/bundle/neobundle.vim/bin/neoinstall
 ```

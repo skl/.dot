@@ -69,8 +69,20 @@ if has("autocmd")
 endif
 "}}}
 
+NeoBundleLazy 'scrooloose/nerdtree', {'autoload':{'commands':['NERDTreeToggle','NERDTreeFind']}} "{{{
+    let NERDTreeShowHidden=1
+    let NERDTreeQuitOnOpen=0
+    let NERDTreeShowLineNumbers=1
+    let NERDTreeChDirMode=0
+    let NERDTreeShowBookmarks=1
+    let NERDTreeIgnore=['\.git','\.hg']
+    let NERDTreeBookmarksFile='~/.vim/.cache/NERDTreeBookmarks'
+"}}}
+
 " keymaps {{{
 nmap <leader>l :set list!<CR>
 
-nnoremap <silent> <F5> :call <SID>StripTrailingWhitespaces()<CR>
+nnoremap <F2> :NERDTreeToggle<CR>
+nnoremap <F3> :NERDTreeFind<CR>
+nnoremap <F5> :call <SID>StripTrailingWhitespaces()<CR>
 "}}}
