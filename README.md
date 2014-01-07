@@ -1,7 +1,9 @@
-# One-line install to ~/.dot
-
-These are my dotfiles.
+# These are my dotfiles
 
 ```
-git clone https://github.com/skl/.dot.git ~/.dot && ln -s ~/.dot/vimrc ~/.vimrc
+# clone
+git clone https://github.com/skl/.dot.git ~/.dot
+
+# .vimrc
+ln -s ~/.dot/vim/rc ~/.vimrc
 ```
