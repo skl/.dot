@@ -17,6 +17,12 @@
 :set foldmethod=marker
 "}}}
 
+" neobundle {{{
+:set rtp+=~/.vim/bundle/neobundle.vim
+call neobundle#rc(expand('~/.vim/bundle/'))
+NeoBundleFetch 'Shougo/neobundle.vim'
+"}}}
+
 " keyboard/mouse general settings {{{
 :set mouse=a
 :set backspace=indent,eol,start
