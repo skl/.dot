@@ -33,6 +33,7 @@ filetype plugin indent on
 :set textwidth=0
 :set wrapmargin=0
 :set encoding=utf-8
+"}}}
 
 " functions {{{
 function! <SID>StripTrailingWhitespaces()
@@ -48,6 +49,7 @@ function! <SID>StripTrailingWhitespaces()
 endfunction
 "}}}
 
+" filetype specifics {{{
 if has("autocmd")
     autocmd FileType make setlocal ts=8 sts=8 sw=8 noexpandtab
     autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
