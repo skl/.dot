@@ -1,4 +1,4 @@
-" vim: fdm=marker ts=4 sts=4 sw=4 fdl=0
+" vim: ft=vim fdm=marker ts=4 sts=4 sw=4 fdl=0
 
 " startup/global general settings {{{
 :set nocompatible
@@ -81,6 +81,8 @@ NeoBundleLazy 'scrooloose/nerdtree', {'autoload':{'commands':['NERDTreeToggle','
 
 " keymaps {{{
 nmap <leader>l :set list!<CR>
+nmap <leader>- zM
+nmap <leader>= zR
 
 nnoremap <F2> :NERDTreeToggle<CR>
 nnoremap <F3> :NERDTreeFind<CR>
