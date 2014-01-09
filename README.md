@@ -1,9 +1,7 @@
 # These are my dotfiles
 
-```
-# clone
-git clone https://github.com/skl/.dot.git ~/.dot
+## One-line install
 
-cd ~/.dot
-make
+```
+git clone https://github.com/skl/.dot.git ~/.dot && ~/.dot/install
 ```
