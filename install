@@ -1,0 +1,32 @@
+#!/bin/bash
+set -ex
+
+# Absolute path to current script http://stackoverflow.com/a/246128
+DOT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+function vim_neobundle_update()
+{
+    cd "${DOT_ROOT}/vim/bundle/neobundle.vim"
+    git checkout master
+    ./bin/neoinstall
+}
+
+function vim_neobundle_check()
+{
+    if [ ! -d "${DOT_ROOT}/vim/bundle/neobundle.vim/.git" ]; then
+        git clone https://github.com/Shougo/neobundle.vim.git "${DOT_ROOT}/vim/bundle/neobundle.vim"
+    fi
+}
+
+function vim_symlinks_check()
+{
+    [ -e "${HOME}/.vim" ] && mv -iv "${HOME}/.vim" "${HOME}/.vim.bak"
+    [ -e "${HOME}/.vimrc" ] && mv -iv "${HOME}/.vimrc" "${HOME}/.vimrc.bak"
+
+    ln -si "${DOT_ROOT}/vim" "${HOME}/.vim"
+    ln -si "${DOT_ROOT}/vim/rc" "${HOME}/.vimrc"
+}
+
+vim_symlinks_check
+vim_neobundle_check
+vim_neobundle_update
