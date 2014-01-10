@@ -6,7 +6,8 @@ set shortmess +=I
 set noswapfile
 set ttyfast
 set showcmd
-set history=100
+set history=1000
+set clipboard=unnamed
 set switchbuf=useopen
 set hidden
 set visualbell t_vb=
