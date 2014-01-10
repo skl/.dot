@@ -35,12 +35,14 @@ filetype plugin indent on
 syntax on
 set ai
 set expandtab
+set smarttab
+set shiftwidth=4
 set tabstop=4
 set shiftwidth=4
 set textwidth=0
 set wrapmargin=0
 set encoding=utf-8
-let &colorcolumn=120
+set colorcolumn=120
 set cursorcolumn
 autocmd WinLeave * setlocal nocursorcolumn
 autocmd WinEnter * setlocal cursorcolumn
