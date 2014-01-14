@@ -94,9 +94,10 @@ NeoBundle 'tpope/vim-fugitive'
 "}}}
 
 " keymaps {{{
-nmap <leader>l :set list!<CR>
-nmap <leader>- zM
-nmap <leader>= zR
+nmap <leader>l :set list!<CR>   " toggle whitespace identifiers
+nmap <leader><leader> za        " toggle fold open/close
+nmap <leader>- zM               " close all folds
+nmap <leader>= zR               " open all folds
 
 nnoremap <F2> :NERDTreeToggle<CR>
 nnoremap <F3> :NERDTreeFind<CR>
