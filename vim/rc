@@ -33,6 +33,7 @@ set listchars=tab:▸\ ,eol:¬
 " indentation and syntax highlighting {{{
 filetype plugin indent on
 syntax on
+set hlsearch
 set ai
 set expandtab
 set smarttab
