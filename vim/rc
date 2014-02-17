@@ -2,6 +2,7 @@
 
 " startup/global general settings {{{
 set nocompatible
+set modelines=5
 set shortmess +=I
 set noswapfile
 set ttyfast
