@@ -93,6 +93,7 @@ colorscheme jellybeans
 
 " plugins {{{
 NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'vim-scripts/taglist.vim'
 "}}}
 
 " keymaps {{{
