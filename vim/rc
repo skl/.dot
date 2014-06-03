@@ -29,6 +29,9 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 set mouse=a
 set backspace=indent,eol,start
 set listchars=tab:▸\ ,eol:¬
+if has('mouse_sgr')
+    set ttymouse=sgr
+endif
 "}}}
 
 " indentation and syntax highlighting {{{
