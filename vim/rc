@@ -47,6 +47,9 @@ set shiftwidth=4
 set textwidth=0
 set wrapmargin=0
 set encoding=utf-8
+set cursorline
+autocmd WinLeave * setlocal nocursorline
+autocmd WinEnter * setlocal cursorline
 set colorcolumn=120
 set cursorcolumn
 autocmd WinLeave * setlocal nocursorcolumn
