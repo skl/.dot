@@ -2,6 +2,7 @@
 
 " startup/global general settings {{{
 set nocompatible
+set modeline
 set modelines=5
 set shortmess +=I
 set noswapfile
@@ -17,6 +18,8 @@ set nu
 set ruler
 set foldcolumn=2
 set foldmethod=marker
+set tags=tags;/
+set showfulltag
 "}}}
 
 " neobundle {{{
@@ -52,8 +55,14 @@ autocmd WinLeave * setlocal nocursorline
 autocmd WinEnter * setlocal cursorline
 set colorcolumn=120
 set cursorcolumn
-autocmd WinLeave * setlocal nocursorcolumn
-autocmd WinEnter * setlocal cursorcolumn
+autocmd BufWinLeave * setlocal nocursorcolumn
+autocmd BufWinEnter * setlocal cursorcolumn
+
+NeoBundle 'scrooloose/syntastic'
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_style_error_symbol = '✠'
+let g:syntastic_warning_symbol = '∆'
+let g:syntastic_style_warning_symbol = '≈'
 "}}}
 
 " functions {{{
@@ -68,6 +77,10 @@ function! <SID>StripTrailingWhitespaces()
     let @/=_s
     call cursor(l, c)
 endfunction
+
+function! s:get_cache_dir(suffix) "{{{
+    return resolve(expand('~/.vim/.cache/' . a:suffix))
+endfunction "}}}
 "}}}
 
 " filetype specifics {{{
@@ -100,6 +113,34 @@ colorscheme jellybeans
 " plugins {{{
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'vim-scripts/taglist.vim'
+NeoBundleLazy 'godlygeek/tabular', {'autoload':{'commands':'Tabularize'}}
+
+NeoBundleLazy 'Shougo/neocomplete.vim', {'autoload':{'insert':1}, 'vim_version':'7.4'}
+    let g:neocomplete#enable_at_startup=1
+    let g:neocomplete#data_directory=s:get_cache_dir('neocomplete')
+    " Enable heavy omni completion.
+    if !exists('g:neocomplete#sources#omni#input_patterns')
+        let g:neocomplete#sources#omni#input_patterns = {}
+    endif
+    let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+
+NeoBundle 'kien/ctrlp.vim', { 'depends': 'tacahiroy/ctrlp-funky' }
+    let g:ctrlp_clear_cache_on_exit=1
+    let g:ctrlp_max_height=40
+    let g:ctrlp_show_hidden=0
+    let g:ctrlp_follow_symlinks=1
+    let g:ctrlp_max_files=20000
+    let g:ctrlp_cache_dir=s:get_cache_dir('ctrlp')
+    "let g:ctrlp_reuse_window='startify'
+    let g:ctrlp_extensions=['funky']
+    let g:ctrlp_custom_ignore = {
+        \ 'dir': '\v[\/]\.(git|hg|svn|idea)$',
+        \ 'file': '\v\.DS_Store$'
+        \ }
+
+    if executable('ag')
+        let g:ctrlp_user_command='ag %s -l --nocolor -g ""'
+    endif
 "}}}
 
 " keymaps {{{
@@ -108,7 +149,34 @@ nmap <leader><leader> za        " toggle fold open/close
 nmap <leader>- zM               " close all folds
 nmap <leader>= zR               " open all folds
 
-nnoremap <F2> :NERDTreeToggle<CR>
-nnoremap <F3> :NERDTreeFind<CR>
+nmap , [ctrlp]
+nnoremap [ctrlp] <nop>
+nnoremap [ctrlp]t :CtrlPBufTag<cr>
+nnoremap [ctrlp]T :CtrlPTag<cr>
+nnoremap [ctrlp]l :CtrlPLine<cr>
+nnoremap [ctrlp]o :CtrlPFunky<cr>
+nnoremap [ctrlp]b :CtrlPBuffer<cr>
+
+nmap <Leader>a& :Tabularize /&<CR>
+vmap <Leader>a& :Tabularize /&<CR>
+nmap <Leader>a= :Tabularize /=<CR>
+vmap <Leader>a= :Tabularize /=<CR>
+nmap <Leader>a: :Tabularize /:<CR>
+vmap <Leader>a: :Tabularize /:<CR>
+nmap <Leader>a:: :Tabularize /:\zs<CR>
+vmap <Leader>a:: :Tabularize /:\zs<CR>
+nmap <Leader>a, :Tabularize /,<CR>
+vmap <Leader>a, :Tabularize /,<CR>
+nmap <Leader>a<Bar> :Tabularize /<Bar><CR>
+vmap <Leader>a<Bar> :Tabularize /<Bar><CR>
+
+nnoremap <leader>' :NERDTreeToggle<CR>
+nnoremap <leader>; :NERDTreeFind<CR>
 nnoremap <F5> :call <SID>StripTrailingWhitespaces()<CR>
+
+" reselect visual block after indent
+vnoremap < <gv
+vnoremap > >gv
 "}}}
+
+NeoBundleCheck
