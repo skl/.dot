@@ -1,4 +1,4 @@
-" vim: ft=vim fdm=marker ts=4 sts=4 sw=4 fdl=0
+" vim: ft=vim fdm=marker ts=4 sts=4 sw=4 fdl=1
 
 " startup/global general settings {{{
 set nocompatible
@@ -16,10 +16,19 @@ set visualbell t_vb=
 set novisualbell
 set nu
 set ruler
-set foldcolumn=2
-set foldmethod=marker
+set foldenable
+set foldmethod=syntax
+set foldlevelstart=99
 set tags=tags;/
 set showfulltag
+set statusline=%<%f\                     " Filename
+set statusline+=%w%h%m%r                 " Options
+set statusline+=%{fugitive#statusline()} " Git Hotness
+set statusline+=\ [%{&ff}/%Y]            " Filetype
+set statusline+=\ [%{getcwd()}]          " Current dir
+set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
+set splitright
+set splitbelow
 "}}}
 
 " neobundle {{{
@@ -40,7 +49,9 @@ endif
 " indentation and syntax highlighting {{{
 filetype plugin indent on
 syntax on
+set incsearch
 set hlsearch
+set ignorecase
 set ai
 set expandtab
 set smarttab
@@ -63,37 +74,26 @@ let g:syntastic_error_symbol = '✗'
 let g:syntastic_style_error_symbol = '✠'
 let g:syntastic_warning_symbol = '∆'
 let g:syntastic_style_warning_symbol = '≈'
-"}}}
+" }}}
 
 " functions {{{
-function! <SID>StripTrailingWhitespaces()
-    " Preparation: save last search, and cursor position.
-    let _s=@/
-    let l = line(".")
-    let c = col(".")
-    " Do the business:
-    %s/\s\+$//e
-    " Clean up: restore previous search history, and cursor position
-    let @/=_s
-    call cursor(l, c)
-endfunction
-
-function! s:get_cache_dir(suffix) "{{{
+function! s:get_cache_dir(suffix)
     return resolve(expand('~/.vim/.cache/' . a:suffix))
-endfunction "}}}
-"}}}
+endfunction
+" }}}
 
 " filetype specifics {{{
-autocmd FileType make setlocal ts=8 sts=8 sw=8 noexpandtab
-autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
-
-"autocmd FileType javascript setlocal ts=4 sts=4 sw=4 noexpandtab
-
-" map file extensions to type
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 autocmd BufNewFile,BufRead *.rss,*.atom setfiletype xml
 
-autocmd BufWritePre *.py,*.js,*.php,*.html,*.htm :call <SID>StripTrailingWhitespaces()
-"}}}
+autocmd FileType make setlocal ts=8 sts=8 sw=8 noexpandtab
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType js,scss,css autocmd BufWritePre <buffer> call StripTrailingWhitespace()
+autocmd FileType css,scss setlocal foldmethod=marker foldmarker={,}
+autocmd FileType python setlocal foldmethod=indent
+autocmd FileType markdown setlocal nolist
+autocmd FileType vim setlocal fdm=indent keywordprg=:help
+" }}}
 
 NeoBundleLazy 'scrooloose/nerdtree', {'autoload':{'commands':['NERDTreeToggle','NERDTreeFind']}} "{{{
     let NERDTreeShowHidden=1
@@ -103,16 +103,29 @@ NeoBundleLazy 'scrooloose/nerdtree', {'autoload':{'commands':['NERDTreeToggle','
     let NERDTreeShowBookmarks=1
     let NERDTreeIgnore=['\.git','\.hg']
     let NERDTreeBookmarksFile='~/.vim/.cache/NERDTreeBookmarks'
-"}}}
+" }}}
 
 " colourscheme {{{
 NeoBundle 'nanotech/jellybeans.vim'
 colorscheme jellybeans
-"}}}
+" }}}
 
 " plugins {{{
-NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'bronson/vim-trailing-whitespace'
 NeoBundle 'vim-scripts/taglist.vim'
+NeoBundle 'vim-scripts/phpmanual'
+NeoBundle 'spf13/PIV'
+    let g:DisableAutoPHPFolding = 1
+    let g:PIVAutoClose = 0
+
+NeoBundle 'mhinz/vim-signify'
+    let g:signify_vcs_list = [ 'git' ]
+    let g:signify_update_on_bufenter=0
+
+NeoBundle 'justinmk/vim-sneak'
+    let g:sneak#s_next=1
+
+NeoBundle 'gregsexton/gitv', {'depends':['tpope/vim-fugitive']}
 NeoBundleLazy 'godlygeek/tabular', {'autoload':{'commands':'Tabularize'}}
 
 NeoBundleLazy 'Shougo/neocomplete.vim', {'autoload':{'insert':1}, 'vim_version':'7.4'}
@@ -141,14 +154,14 @@ NeoBundle 'kien/ctrlp.vim', { 'depends': 'tacahiroy/ctrlp-funky' }
     if executable('ag')
         let g:ctrlp_user_command='ag %s -l --nocolor -g ""'
     endif
-"}}}
+" }}}
 
 " keymaps {{{
-nmap <leader>l :set list!<CR>   " toggle whitespace identifiers
+" folding
 nmap <leader><leader> za        " toggle fold open/close
 nmap <leader>- zM               " close all folds
 nmap <leader>= zR               " open all folds
-
+" CtrlP
 nmap , [ctrlp]
 nnoremap [ctrlp] <nop>
 nnoremap [ctrlp]t :CtrlPBufTag<cr>
@@ -170,13 +183,20 @@ vmap <Leader>a, :Tabularize /,<CR>
 nmap <Leader>a<Bar> :Tabularize /<Bar><CR>
 vmap <Leader>a<Bar> :Tabularize /<Bar><CR>
 
+" NERDTree
 nnoremap <leader>' :NERDTreeToggle<CR>
 nnoremap <leader>; :NERDTreeFind<CR>
-nnoremap <F5> :call <SID>StripTrailingWhitespaces()<CR>
+nnoremap <leader>w :FixWhitespace<CR>
+
+" toggle whitespace identifiers
+nmap <leader>l :set list!<CR>
 
 " reselect visual block after indent
 vnoremap < <gv
 vnoremap > >gv
-"}}}
+
+nnoremap <silent> <leader>gv :Gitv<CR>
+nnoremap <silent> <leader>gV :Gitv!<CR>
+" }}}
 
 NeoBundleCheck
