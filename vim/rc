@@ -114,6 +114,7 @@ colorscheme jellybeans
 NeoBundle 'bronson/vim-trailing-whitespace'
 NeoBundle 'vim-scripts/taglist.vim'
 NeoBundle 'vim-scripts/phpmanual'
+NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'spf13/PIV'
     let g:DisableAutoPHPFolding = 1
     let g:PIVAutoClose = 0
@@ -157,10 +158,14 @@ NeoBundle 'kien/ctrlp.vim', { 'depends': 'tacahiroy/ctrlp-funky' }
 " }}}
 
 " keymaps {{{
+nmap <silent> <leader>// \ci
+vmap <silent> <leader>// \ci
+
 " folding
 nmap <leader><leader> za        " toggle fold open/close
 nmap <leader>- zM               " close all folds
 nmap <leader>= zR               " open all folds
+
 " CtrlP
 nmap , [ctrlp]
 nnoremap [ctrlp] <nop>
@@ -170,6 +175,7 @@ nnoremap [ctrlp]l :CtrlPLine<cr>
 nnoremap [ctrlp]o :CtrlPFunky<cr>
 nnoremap [ctrlp]b :CtrlPBuffer<cr>
 
+" Tablular
 nmap <Leader>a& :Tabularize /&<CR>
 vmap <Leader>a& :Tabularize /&<CR>
 nmap <Leader>a= :Tabularize /=<CR>
